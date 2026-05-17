@@ -1,0 +1,36 @@
+{
+    "name": "expense-manager-frontend",
+    "version": "1.0.0",
+    "description": "MERN Stack Expense Manager Application - Frontend",
+    "private": true,
+    "proxy": "http://localhost:5000",
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.9.2",
+        "axios": "^1.4.0",
+        "date-fns": "^2.30.0",
+        "framer-motion": "^10.11.0",
+        "lucide-react": "^0.263.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-hook-form": "^7.43.0",
+        "react-hot-toast": "^2.4.0",
+        "react-redux": "^8.0.5",
+        "react-router-dom": "^6.10.0",
+        "recharts": "^2.7.0",
+        "tailwindcss": "^3.3.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.0.0",
+        "autoprefixer": "^10.4.14",
+        "postcss": "^8.4.24",
+        "postcss-scss": "^4.0.9",
+        "stylelint": "^17.11.1",
+        "stylelint-config-standard": "^40.0.0",
+        "vite": "^4.3.4"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    }
+}
