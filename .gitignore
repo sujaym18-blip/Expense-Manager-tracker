@@ -35,3 +35,7 @@ uploads/
 
 # Testing
 .coverage
+
+# Documentation (Markdown files)
+*.md
+!README.md
