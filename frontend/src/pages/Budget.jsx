@@ -10,7 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const Budget = () => {
   const dispatch = useDispatch();
-  const { budgets, isLoading } = useSelector((state) => state.budget);
+  const { budgets = [], isLoading } = useSelector((state) => state.budget);
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'));
@@ -21,7 +21,8 @@ const Budget = () => {
       try {
         dispatch(fetchStart());
         const budRes = await budgetAPI.getAll({ month: selectedMonth });
-        dispatch(fetchSuccess(budRes.data.data));
+        const budgetData = Array.isArray(budRes.data) ? budRes.data : budRes.data.data || [];
+        dispatch(fetchSuccess(budgetData));
 
         const catRes = await categoryAPI.getAll({ type: 'expense' });
         setCategories(catRes.data);
@@ -47,7 +48,8 @@ const Budget = () => {
       setShowForm(false);
 
       const budRes = await budgetAPI.getAll({ month: selectedMonth });
-      dispatch(fetchSuccess(budRes.data.data));
+      const budgetData = Array.isArray(budRes.data) ? budRes.data : budRes.data.data || [];
+      dispatch(fetchSuccess(budgetData));
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to create budget';
       toast.error(message);
@@ -60,7 +62,8 @@ const Budget = () => {
         await budgetAPI.delete(id);
         toast.success('Budget deleted');
         const budRes = await budgetAPI.getAll({ month: selectedMonth });
-        dispatch(fetchSuccess(budRes.data.data));
+        const budgetData = Array.isArray(budRes.data) ? budRes.data : budRes.data.data || [];
+        dispatch(fetchSuccess(budgetData));
       } catch (error) {
         toast.error('Failed to delete budget');
       }

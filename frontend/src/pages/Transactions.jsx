@@ -132,7 +132,7 @@ const Transactions = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t) => (
+            {(transactions || []).map((t) => (
               <tr key={t._id} className="border-b hover:bg-gray-50">
                 <td className="py-4 px-4">{format(new Date(t.date), 'MMM dd, yyyy')}</td>
                 <td className="py-4 px-4">

@@ -34,18 +34,20 @@ const Dashboard = () => {
 
         // Fetch budget status
         const budgetRes = await budgetAPI.getStatus(currentMonth);
-        dispatch(fetchStatusSuccess(budgetRes.data.data));
+        const budgetStatus = budgetRes.data.data || budgetRes.data;
+        dispatch(fetchStatusSuccess(budgetStatus));
 
-        // Calculate stats
-        const income = transRes.data.data.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-        const expenses = transRes.data.data.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+        // Calculate stats using the data array
+        const transactionList = transRes.data.data || transRes.data;
+        const income = transactionList.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+        const expenses = transactionList.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
         const balance = income - expenses;
 
         setStats({
           income,
           expenses,
           balance,
-          transactionCount: transRes.data.data.length,
+          transactionCount: transactionList.length,
         });
 
         // Prepare chart data (last 7 days)
@@ -60,7 +62,7 @@ const Dashboard = () => {
           });
         }
 
-        transRes.data.data.forEach((t) => {
+        transactionList.forEach((t) => {
           const dayIndex = last7Days.findIndex((d) => d.date === format(new Date(t.date), 'MMM dd'));
           if (dayIndex !== -1) {
             if (t.type === 'income') {
@@ -84,7 +86,7 @@ const Dashboard = () => {
 
   const COLORS = ['#10b981', '#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
 
-  const categoryData = transactions
+  const categoryData = (transactions || [])
     .filter((t) => t.type === 'expense')
     .reduce((acc, t) => {
       const existing = acc.find((c) => c.name === t.category.name);
@@ -228,7 +230,7 @@ const Dashboard = () => {
           <div className="card">
             <h3 className="text-xl font-bold text-dark mb-6">Recent Transactions</h3>
             <div className="space-y-3 max-h-80 overflow-y-auto">
-              {transactions.slice(0, 8).map((t) => (
+              {(transactions || []).slice(0, 8).map((t) => (
                 <div key={t._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <div>
                     <p className="font-medium text-dark">{t.category.name}</p>
