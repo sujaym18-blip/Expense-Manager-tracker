@@ -30,7 +30,7 @@ const Dashboard = () => {
           startDate: `${currentMonth}-01`,
           endDate: format(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy-MM-dd'),
         });
-        dispatch(fetchTransactionSuccess(transRes.data.data));
+        dispatch(fetchTransactionSuccess(transRes.data));
 
         // Fetch budget status
         const budgetRes = await budgetAPI.getStatus(currentMonth);
