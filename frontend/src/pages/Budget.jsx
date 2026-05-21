@@ -24,7 +24,7 @@ const Budget = () => {
         dispatch(fetchSuccess(budRes.data.data));
 
         const catRes = await categoryAPI.getAll({ type: 'expense' });
-        setCategories(catRes.data.data);
+        setCategories(catRes.data);
       } catch (error) {
         toast.error('Failed to load budgets');
       }

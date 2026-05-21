@@ -36,7 +36,7 @@ const Transactions = () => {
     const fetchCategories = async () => {
       try {
         const res = await categoryAPI.getAll();
-        setCategories(res.data.data);
+        setCategories(res.data);
       } catch (error) {
         toast.error('Failed to load categories');
       }
