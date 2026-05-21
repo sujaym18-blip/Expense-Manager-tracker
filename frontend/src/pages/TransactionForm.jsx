@@ -67,7 +67,7 @@ const TransactionForm = () => {
     }
   };
 
-  const filteredCategories = categories.filter((cat) => cat.type === transactionType || cat.type === 'both');
+  const filteredCategories = (categories || []).filter((cat) => cat.type === transactionType || cat.type === 'both');
 
   return (
     <div className="p-4 md:p-8">
@@ -119,7 +119,7 @@ const TransactionForm = () => {
               className="input-field"
             >
               <option value="">Select a category</option>
-              {filteredCategories.map((cat) => (
+              {(filteredCategories || []).map((cat) => (
                 <option key={cat._id} value={cat._id}>
                   {cat.icon} {cat.name}
                 </option>

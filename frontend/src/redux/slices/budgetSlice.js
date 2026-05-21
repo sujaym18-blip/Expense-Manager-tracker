@@ -18,7 +18,7 @@ const budgetSlice = createSlice({
         },
         fetchSuccess: (state, action) => {
             state.isLoading = false;
-            state.budgets = action.payload;
+            state.budgets = Array.isArray(action.payload) ? action.payload : [];
         },
         fetchFailure: (state, action) => {
             state.isLoading = false;

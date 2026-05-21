@@ -108,7 +108,7 @@ const Budget = () => {
                 className="input-field"
               >
                 <option value="">Select category</option>
-                {categories.map((cat) => (
+                {(categories || []).map((cat) => (
                   <option key={cat._id} value={cat._id}>
                     {cat.icon} {cat.name}
                   </option>
@@ -146,7 +146,7 @@ const Budget = () => {
 
       {/* Budgets Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {budgets.map((budget) => (
+        {(budgets || []).map((budget) => (
           <div key={budget._id} className="card">
             <div className="flex justify-between items-start mb-4">
               <div>

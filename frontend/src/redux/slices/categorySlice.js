@@ -17,7 +17,7 @@ const categorySlice = createSlice({
         },
         fetchSuccess: (state, action) => {
             state.isLoading = false;
-            state.categories = action.payload;
+            state.categories = Array.isArray(action.payload) ? action.payload : [];
         },
         fetchFailure: (state, action) => {
             state.isLoading = false;

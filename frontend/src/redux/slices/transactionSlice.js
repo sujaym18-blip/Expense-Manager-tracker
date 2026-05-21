@@ -30,8 +30,8 @@ const transactionSlice = createSlice({
         },
         fetchSuccess: (state, action) => {
             state.isLoading = false;
-            state.transactions = action.payload.data;
-            state.pagination = action.payload.pagination;
+            state.transactions = Array.isArray(action.payload.data) ? action.payload.data : [];
+            state.pagination = action.payload.pagination || { page: 1, limit: 10, total: 0, pages: 0 };
         },
         fetchFailure: (state, action) => {
             state.isLoading = false;
