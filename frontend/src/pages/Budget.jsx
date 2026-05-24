@@ -36,9 +36,12 @@ const Budget = () => {
           ? budRes.data
           : budRes.data?.data || [];
 
-        const categoryData = Array.isArray(catRes.data)
+        // Handle category data - check data property first, then fallback to direct array
+        const categoryData = Array.isArray(catRes.data?.data)
+          ? catRes.data.data
+          : Array.isArray(catRes.data)
           ? catRes.data
-          : catRes.data?.data || [];
+          : [];
 
         // Update local state first
         setCategories(categoryData);
@@ -85,6 +88,15 @@ const Budget = () => {
         ? budRes.data
         : budRes.data?.data || [];
 
+      // Also refresh categories
+      const catRes = await categoryAPI.getAll({ type: 'expense' });
+      const categoryData = Array.isArray(catRes.data?.data)
+        ? catRes.data.data
+        : Array.isArray(catRes.data)
+        ? catRes.data
+        : [];
+      setCategories(categoryData);
+
       dispatch(fetchSuccess(budgetData));
     } catch (error) {
       const message =
@@ -104,6 +116,15 @@ const Budget = () => {
         const budgetData = Array.isArray(budRes.data)
           ? budRes.data
           : budRes.data?.data || [];
+
+        // Also refresh categories
+        const catRes = await categoryAPI.getAll({ type: 'expense' });
+        const categoryData = Array.isArray(catRes.data?.data)
+          ? catRes.data.data
+          : Array.isArray(catRes.data)
+          ? catRes.data
+          : [];
+        setCategories(categoryData);
 
         dispatch(fetchSuccess(budgetData));
       } catch (error) {

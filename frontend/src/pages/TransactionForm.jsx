@@ -27,7 +27,11 @@ const TransactionForm = () => {
     const fetchCategories = async () => {
       try {
         const res = await categoryAPI.getAll();
-        const catData = Array.isArray(res.data) ? res.data : res.data.data || [];
+        const catData = Array.isArray(res.data?.data)
+          ? res.data.data
+          : Array.isArray(res.data)
+          ? res.data
+          : [];
         setCategories(catData);
       } catch (error) {
         toast.error('Failed to load categories');
