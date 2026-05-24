@@ -9,10 +9,19 @@ import { format } from 'date-fns';
 const TransactionForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  
+  // 1. Added `watch` and defaultValues to handle the transaction type state cleanly
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      type: 'expense'
+    }
+  });
+  
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [transactionType, setTransactionType] = useState('expense');
+  
+  // 2. Using `watch` to track the type for filtering categories, replacing the buggy custom onChange
+  const transactionType = watch('type');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,11 +42,11 @@ const TransactionForm = () => {
           reset({
             type: t.type,
             amount: t.amount,
-            category: t.category._id,
+            // 3. Added safe fallback: works whether the backend populates the category object or just sends the string ID
+            category: t.category?._id || t.category, 
             description: t.description,
             date: format(new Date(t.date), 'yyyy-MM-dd'),
           });
-          setTransactionType(t.type);
         } catch (error) {
           toast.error('Failed to load transaction');
         }
@@ -82,6 +91,7 @@ const TransactionForm = () => {
       {/* Form */}
       <div className="card max-w-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          
           {/* Type */}
           <div>
             <label className="label-field">Type</label>
@@ -91,8 +101,6 @@ const TransactionForm = () => {
                   type="radio"
                   value="income"
                   {...register('type', { required: true })}
-                  onChange={(e) => setTransactionType(e.target.value)}
-                  defaultChecked={transactionType === 'income'}
                   className="w-4 h-4"
                 />
                 <span className="text-gray-700 font-medium">Income</span>
@@ -102,8 +110,6 @@ const TransactionForm = () => {
                   type="radio"
                   value="expense"
                   {...register('type', { required: true })}
-                  onChange={(e) => setTransactionType(e.target.value)}
-                  defaultChecked={transactionType === 'expense'}
                   className="w-4 h-4"
                 />
                 <span className="text-gray-700 font-medium">Expense</span>
