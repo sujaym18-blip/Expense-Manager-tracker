@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { budgetAPI, categoryAPI } from '../services/endpoints';
-import { fetchSuccess, fetchStart } from '../redux/slices/budgetSlice';
+import { fetchSuccess, fetchStart, fetchFailure } from '../redux/slices/budgetSlice';
 import toast from 'react-hot-toast';
 import { Plus, Trash2, Edit2 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -26,24 +26,30 @@ const Budget = () => {
       try {
         dispatch(fetchStart());
 
-        // Fetch budgets
-        const budRes = await budgetAPI.getAll({ month: selectedMonth });
+        // Fetch budgets and categories simultaneously
+        const [budRes, catRes] = await Promise.all([
+          budgetAPI.getAll({ month: selectedMonth }),
+          categoryAPI.getAll({ type: 'expense' })
+        ]);
+
         const budgetData = Array.isArray(budRes.data)
           ? budRes.data
           : budRes.data?.data || [];
 
-        dispatch(fetchSuccess(budgetData));
-
-        // Fetch categories
-        const catRes = await categoryAPI.getAll({ type: 'expense' });
         const categoryData = Array.isArray(catRes.data)
           ? catRes.data
           : catRes.data?.data || [];
 
+        // Update local state first
         setCategories(categoryData);
+        
+        // Then dispatch to Redux to set isLoading to false
+        dispatch(fetchSuccess(budgetData));
+
       } catch (error) {
         console.error(error);
-        toast.error('Failed to load budgets');
+        toast.error('Failed to load budgets and categories');
+        dispatch(fetchFailure(error.response?.data?.message || 'Failed to fetch data'));
       }
     };
 
